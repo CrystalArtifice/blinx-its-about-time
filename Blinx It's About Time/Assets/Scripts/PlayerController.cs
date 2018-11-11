@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
-
+public class PlayerController : MonoBehaviour
+{
     // Horizontal walking movement speed of the player.
     public float walkSpeed;
 
@@ -165,7 +165,7 @@ public class PlayerController : MonoBehaviour {
     /**
      * Check if the player is on the ground.
      */
-    private bool IsGrounded()
+    public bool IsGrounded()
     {
         return Physics2D.Raycast(rb2d.position, Vector2.down, boundsOffset + groundedMargin, LayerMask.GetMask("Ground"));
     }
@@ -184,7 +184,7 @@ public class PlayerController : MonoBehaviour {
     /**
      * Get the distance from the player to the ground.
      */
-    private float DistanceToGround()
+    public float DistanceToGround()
     {
         // The raycast hit data.
         RaycastHit2D rayHit = Physics2D.Raycast(rb2d.position, Vector2.down, 10, LayerMask.GetMask("Ground"));
