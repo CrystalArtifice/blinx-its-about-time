@@ -7,6 +7,27 @@ public class PlayerController : MonoBehaviour {
     // Horizontal walking movement speed of the player.
     public float walkSpeed;
 
+    // The sprint multiplier of the movement speed.
+    public float sprintMultiplier;
+
+    // If the player is spriting.
+    private bool isSprinting = false;
+
+    // The time between the player ceasing movement and the character responding in seconds.
+    public float stopDelay = 0.5f;
+
+    // The counter of how long the player has left to press a sprint button.
+    private float stopCounter = 0.0f;
+
+    // The last walking direction of the player.
+    private float walkMomentum = 0.0f;
+
+    // The last control direction of the player.
+    private float lastWalkDirection1 = 0.0f;
+
+    // The second last control direction of the player.
+    private float lastWalkDirection2 = 0.0f;
+
     // The current vertical velocity of the player.
     private float deltaV = 0.0f;
 
@@ -45,8 +66,62 @@ public class PlayerController : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        // Calculate the horizontal speed of the player to offset position by.
-        float deltaH = walkSpeed * Input.GetAxis("Horizontal");
+        float deltaH;
+
+        // If the direction is zero, continue along the last walk direction.
+        if (Input.GetAxis("Horizontal") == 0.0f)
+        {
+            deltaH = walkSpeed * walkMomentum;
+        }
+        else
+        {
+            // If the new press matches to the old.
+            if (Mathf.Sign(Input.GetAxis("Horizontal")) == Mathf.Sign(walkMomentum))
+            {
+                // If there was a break between presses - sprint. Break can be detected via the sudden acceleration of the player after slowing.
+                if (Mathf.Abs(lastWalkDirection1) < Mathf.Abs(Input.GetAxis("Horizontal")) && Mathf.Abs(lastWalkDirection1) < Mathf.Abs(lastWalkDirection2))
+                    isSprinting = true;
+            }
+            // If the press is of the opposite direction or done, slow down and slide.
+            else
+            {
+                isSprinting = false;
+            }
+
+            // If not sprinting or moving in the same direction as the sprint, move normally.
+            if (!isSprinting || Mathf.Sign(Input.GetAxis("Horizontal")) == Mathf.Sign(walkMomentum))
+            {
+                // Calculate the horizontal speed of the player to offset position by.
+                deltaH = walkSpeed * Input.GetAxis("Horizontal");
+                walkMomentum = Input.GetAxis("Horizontal");
+                stopCounter = stopDelay;
+            }
+            // Otherwise ignore movement if spriting and sliding to a stop.
+            else
+            {
+                deltaH = walkSpeed * walkMomentum;
+            }
+        }
+
+        // Multiply speed by sprinting speed.
+        if (isSprinting)
+            deltaH *= sprintMultiplier;
+
+        // Update the last walk direction.
+        lastWalkDirection2 = lastWalkDirection1;
+        lastWalkDirection1 = Input.GetAxis("Horizontal");
+
+        // Decrement the sprint counter.
+        if (stopCounter > 0.0f)
+            stopCounter -= Time.deltaTime;
+
+        // Reset the last walk direction and sprint status if expired.
+        if (stopCounter <= 0.0f)
+        {
+            stopCounter = 0.0f;
+            isSprinting = false;
+            walkMomentum = 0.0f;
+        }
 
         // Calculate gravity effect depending on jump stage.
         if (!IsGrounded() && deltaV > -terminalVelocity)
