@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         // Jump if on the ground.
-        if(IsGrounded() && (Input.GetButtonDown("Jump")))
+        if (IsGrounded() && (Input.GetButtonDown("Jump")))
             deltaV = jumpVelocity;
 
         // Sum movement and add.
@@ -148,6 +148,8 @@ public class PlayerController : MonoBehaviour {
         // Only perform one raycast.
         float altitude = DistanceToGround();
 
+        if (IsAboveGround())
+        { 
         // Check movement to make sure we aren't clipping into the floor.
         if (movement.y < -altitude)
             movement.y = -altitude;
@@ -155,6 +157,7 @@ public class PlayerController : MonoBehaviour {
         // Set the player level with the ground if they are "floating" and momentum has ceased.
         if (movement.y == 0 && altitude > 0 && altitude < groundedMargin)
             movement.y = -altitude;
+        }
 
         rb2d.MovePosition(rb2d.position + movement);    
     }
@@ -165,6 +168,17 @@ public class PlayerController : MonoBehaviour {
     private bool IsGrounded()
     {
         return Physics2D.Raycast(rb2d.position, Vector2.down, boundsOffset + groundedMargin, LayerMask.GetMask("Ground"));
+    }
+
+    /**
+     * Get the distance from the player to the ground.
+     */
+    private bool IsAboveGround()
+    {
+        // The raycast hit data.
+        RaycastHit2D rayHit = Physics2D.Raycast(rb2d.position, Vector2.down, 10, LayerMask.GetMask("Ground"));
+
+        return rayHit.collider != null;
     }
 
     /**
