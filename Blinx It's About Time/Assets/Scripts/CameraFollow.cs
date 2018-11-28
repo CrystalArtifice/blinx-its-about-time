@@ -9,7 +9,7 @@ public class CameraFollow : MonoBehaviour
 
     // How fast the camera moves to the target position.
     [Range(0f, 1f)]
-    public float lerpSpeed = 0f;
+    public float lerpSpeed = 1f;
 
     // The offset between the camera and the player's position.
     private Vector3 offset;
