@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
     private float boundsOffset;
 
     // The error bounds for the ground collision checker.
-    private float groundedMargin = 0.2f;
+    private float groundedMargin = 0.1f;
 
     // True if the jump button was pressed at any time during the current FixedUpdate tick.
     private bool jumpButtonPressed;
