@@ -5,19 +5,23 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     // The player to follow.
-    public GameObject player;
+    public Transform player;
+
+    // How fast the camera moves to the target position.
+    [Range(0f, 1f)]
+    public float lerpSpeed = 1f;
 
     // The offset between the camera and the player's position.
     private Vector3 offset;
 
     void Start ()
     {
-        offset = transform.position - player.transform.position;
+        offset = transform.position - player.position;
     }
 
 	// Update is called once per frame
 	void LateUpdate ()
     {
-        transform.position = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
+        transform.position = Vector3.Lerp(transform.position, player.position + offset, lerpSpeed);
 	}
 }

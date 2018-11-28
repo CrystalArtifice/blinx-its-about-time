@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public bool isGrounded;
+
     // Horizontal walking movement speed of the player.
     public float walkSpeed;
 
@@ -55,6 +57,9 @@ public class PlayerController : MonoBehaviour
     // The error bounds for the ground collision checker.
     private float groundedMargin = 0.1f;
 
+    // True if the jump button was pressed at any time during the current FixedUpdate tick.
+    private bool jumpButtonPressed;
+
     // Use this for initialization
     void Start ()
     {
@@ -64,8 +69,19 @@ public class PlayerController : MonoBehaviour
         boundsOffset = collider2d.bounds.extents.y;
 	}
 
+    private void Update()
+    {
+        if(Input.GetButtonDown("Jump"))
+        {
+            // This is set to false at the end of the current FixedUpdate.
+            jumpButtonPressed = true;
+        }
+    }
+
     private void FixedUpdate()
     {
+        isGrounded = IsGrounded();
+
         float deltaH;
 
         // If the direction is zero, continue along the last walk direction.
@@ -139,7 +155,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Jump if on the ground.
-        if (IsGrounded() && (Input.GetButtonDown("Jump")))
+        if (IsGrounded() && jumpButtonPressed)
             deltaV = jumpVelocity;
 
         // Sum movement and add.
@@ -159,7 +175,10 @@ public class PlayerController : MonoBehaviour
             movement.y = -altitude;
         }
 
-        rb2d.MovePosition(rb2d.position + movement);    
+        rb2d.MovePosition(rb2d.position + movement);
+
+        // Reset the jump button state
+        jumpButtonPressed = false;
     }
 
     /**
