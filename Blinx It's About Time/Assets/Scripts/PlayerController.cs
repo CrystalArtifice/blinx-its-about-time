@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TimeControl;
 
 public class PlayerController : MonoBehaviour
 {
+    public TimeEngine engine;
+
     public bool isGrounded;
 
     // Horizontal walking movement speed of the player.
@@ -63,6 +66,8 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        engine.Register(transform);
+
         rb2d = GetComponent<Rigidbody2D>();
         collider2d = GetComponent<Collider2D>();
 
