@@ -149,7 +149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9b1a7f1923bf6341b1882f8a93fbffa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 2001661305}
+  player: {fileID: 2001661307}
+  lerpSpeed: 1
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -407,6 +408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf6a012f2540ea948b10ac83bd94a731, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGrounded: 0
   walkSpeed: 10
   sprintMultiplier: 1.5
   stopDelay: 0.5
