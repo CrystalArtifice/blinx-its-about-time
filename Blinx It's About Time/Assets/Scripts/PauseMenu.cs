@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using TimeControl;
 
 [RequireComponent(typeof(Animator))]
 public class PauseMenu : MonoBehaviour
 {
     public PlayerController playerController;
+    public TimeEngine engine;
 
     Animator anim;
     bool paused = false;
@@ -22,6 +24,7 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
+
         if (paused)
         {
             if (Input.GetButtonDown("Start") || Input.GetButtonDown("Back"))
@@ -40,6 +43,22 @@ public class PauseMenu : MonoBehaviour
                 resumeButton.gameObject.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(resumeButton.gameObject, null);
             }
+
+
+        }
+
+        if (!paused)
+        {
+            if (Input.GetButtonDown("Retry"))
+            {
+                engine.recordingState = TimeEngine.RecordingState.REWINDING;
+                playerController.enabled = false;
+            }
+            else if (Input.GetButtonUp("Retry"))
+            {
+                engine.recordingState = TimeEngine.RecordingState.RECORDING;
+                playerController.enabled = true;
+            }
         }
 
     }
@@ -49,6 +68,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 0f;
         anim.SetBool("open", true);
         playerController.enabled = false;
+        engine.recordingState = TimeEngine.RecordingState.PAUSED;
     }
 
     public void Play()
@@ -56,6 +76,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         anim.SetBool("open", false);
         playerController.enabled = true;
+        engine.recordingState = TimeEngine.RecordingState.RECORDING;
     }
 
     public void Restart()
