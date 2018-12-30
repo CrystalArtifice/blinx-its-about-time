@@ -175,7 +175,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 6.9
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -452,7 +452,7 @@ MonoBehaviour:
   isGrounded: 0
   walkSpeed: 10
   sprintMultiplier: 1.5
-  stopDelay: 0.5
+  stopDelay: 0.05
   jumpVelocity: 25
   jumpBreakingMultiplier: 1.8
   jumpGravityMultiplier: 2
