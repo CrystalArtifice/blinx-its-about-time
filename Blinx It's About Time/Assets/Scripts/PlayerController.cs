@@ -5,6 +5,8 @@ using TimeControl;
 
 public class PlayerController : MonoBehaviour
 {
+    enum JumpState { GROUNDED, FIRST, SECOND }
+    
     public TimeEngine engine;
 
     public bool isGrounded;
@@ -63,14 +65,14 @@ public class PlayerController : MonoBehaviour
     // True if the jump button was pressed at any time during the current FixedUpdate tick.
     private bool jumpButtonPressed;
 
+    private JumpState jumpState;
+
     // Use this for initialization
     void Start ()
     {
-        engine.Register(transform);
-
         rb2d = GetComponent<Rigidbody2D>();
         collider2d = GetComponent<Collider2D>();
-
+        engine.Register(rb2d);
         boundsOffset = collider2d.bounds.extents.y;
 	}
 
@@ -145,24 +147,39 @@ public class PlayerController : MonoBehaviour
         }
 
         // Calculate gravity effect depending on jump stage.
-        if (!IsGrounded() && deltaV > -terminalVelocity)
+        if (deltaV > -terminalVelocity)
         {
-            if (deltaV < 0)
-                deltaV += Physics2D.gravity.y * jumpGravityMultiplier;
-            else if (!Input.GetButton("Jump"))
-                deltaV += Physics2D.gravity.y * jumpBreakingMultiplier;
+            if (!IsGrounded())
+            {
+                if (deltaV < 0)
+                    deltaV += Physics2D.gravity.y * jumpGravityMultiplier;
+                else if (!Input.GetButton("Jump"))
+                    deltaV += Physics2D.gravity.y * jumpBreakingMultiplier;
+                else
+                    deltaV += Physics2D.gravity.y;
+            }
             else
-                deltaV += Physics2D.gravity.y;
-        }
-        else
-        {
-            deltaV = 0;
+            {
+                deltaV = -terminalVelocity;
+            }
         }
 
         // Jump if on the ground.
-        if (IsGrounded() && jumpButtonPressed)
-            deltaV = jumpVelocity;
+        if (IsGrounded())
+            jumpState = JumpState.GROUNDED;
 
+        if (jumpButtonPressed)
+        {
+            if (jumpState == JumpState.GROUNDED)
+            {
+                jumpState = JumpState.FIRST;
+                deltaV = jumpVelocity;
+            }else if(jumpState == JumpState.FIRST)
+            {
+                jumpState = JumpState.SECOND;
+                deltaV = jumpVelocity;
+            }
+        }
         // Sum movement and add.
         Vector2 movement = new Vector2(deltaH, deltaV) * Time.deltaTime;
 
