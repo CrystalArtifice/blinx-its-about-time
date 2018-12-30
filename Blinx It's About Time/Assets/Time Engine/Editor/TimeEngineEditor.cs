@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+#if UNITY_EDITOR
 namespace TimeControl
 {
     [CustomEditor(typeof(TimeEngine))]
@@ -38,6 +39,8 @@ namespace TimeControl
         {
 
             serializedObject.Update();
+            oldRS = eng.recordingState;
+
             newTS = (TimeState)EditorGUILayout.EnumPopup("Global Time State", oldTS);
             EditorGUILayout.Space();
             newRS = (TimeEngine.RecordingState)EditorGUILayout.EnumPopup("Record State", oldRS);
@@ -63,3 +66,4 @@ namespace TimeControl
         }
     }
 }
+#endif
