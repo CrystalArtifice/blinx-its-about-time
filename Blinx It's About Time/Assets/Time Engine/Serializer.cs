@@ -51,6 +51,9 @@ namespace TimeControl
             else if (t == typeof(decimal))
             {
                 return GetBytes((decimal)o);
+            }else if(t == typeof(Vector2))
+            {
+                return GetBytes((Vector2)o);
             }
             else if (t == typeof(Vector3))
             {
@@ -120,6 +123,10 @@ namespace TimeControl
             {
                 size = sizeof(decimal);
                 return ToDecimal(bytes, startIndex);
+            }else if(t == typeof(Vector2))
+            {
+                size = 2 * sizeof(float);
+                return ToVector2(bytes, startIndex);
             }
             else if (t == typeof(Vector3))
             {
@@ -167,6 +174,13 @@ namespace TimeControl
         public static double ToDouble(byte[] bytes, int startIndex)
         {
             return BitConverter.ToDouble(bytes, startIndex);
+        }
+        public static Vector2 ToVector2(byte[] bytes, int startIndex)
+        {
+            return new Vector2(
+                    ToFloat(bytes, startIndex),
+                    ToFloat(bytes, startIndex + 4)
+                );
         }
         public static Vector3 ToVector3(byte[] bytes, int startIndex)
         {
@@ -257,6 +271,22 @@ namespace TimeControl
             for (int ii = 0; ii < 4; ii++)
             {
                 temp = BitConverter.GetBytes(bits[ii]);
+                bytes[ii * 4] = temp[0];
+                bytes[ii * 4 + 1] = temp[1];
+                bytes[ii * 4 + 2] = temp[2];
+                bytes[ii * 4 + 3] = temp[3];
+            }
+            return bytes;
+        }
+
+        public static byte[] GetBytes(Vector2 v)
+        {
+            byte[] bytes = new byte[8];
+            byte[] temp;
+
+            for (int ii = 0; ii < 2; ii++)
+            {
+                temp = System.BitConverter.GetBytes(v[ii]);
                 bytes[ii * 4] = temp[0];
                 bytes[ii * 4 + 1] = temp[1];
                 bytes[ii * 4 + 2] = temp[2];

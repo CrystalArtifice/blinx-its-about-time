@@ -109,6 +109,9 @@ namespace TimeControl
             def = StateDefinitionFactory.CreateDefinition(typeof(Rigidbody), "position", "rotation", "velocity", "angularVelocity");
             definitions.Add(typeof(Rigidbody), def);
 
+            def = StateDefinitionFactory.CreateDefinition(typeof(Rigidbody2D), "position", "rotation", "velocity", "angularVelocity");
+            definitions.Add(typeof(Rigidbody2D), def);
+
             def = StateDefinitionFactory.CreateDefinition(typeof(Transform), "position", "rotation", "localScale");
             definitions.Add(typeof(Transform), def);
             
