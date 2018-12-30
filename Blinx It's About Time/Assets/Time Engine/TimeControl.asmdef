@@ -1,0 +1,9 @@
+{
+    "name": "TimeControl",
+    "references": [
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}

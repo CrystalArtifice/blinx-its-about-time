@@ -1,0 +1,14 @@
+{
+    "name": "EditModeTests",
+    "references": [
+        "TimeControl"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}
